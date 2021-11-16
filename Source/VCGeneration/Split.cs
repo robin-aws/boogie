@@ -1401,7 +1401,7 @@ namespace VC
         }
       }
 
-      public void ReadOutcome(ref ConditionGeneration.Outcome curOutcome, out bool proverFailed)
+      public void ReadOutcome(ref ConditionGeneration.Outcome curOutcome, out bool proverFailed, ref int totalResourceCount)
       {
         Contract.EnsuresOnThrow<UnexpectedProverOutputException>(true);
         ProverInterface.Outcome outcome = cce.NonNull(checker).ReadOutcome();
@@ -1417,6 +1417,8 @@ namespace VC
           DumpDot(splitNum);
         }
 
+        totalResourceCount += checker.ProverResourceCount;
+        
         proverFailed = false;
 
         switch (outcome)

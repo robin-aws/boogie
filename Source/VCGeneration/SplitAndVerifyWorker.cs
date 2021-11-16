@@ -30,6 +30,8 @@ namespace VC
     private int total;
     private int splitNumber;
 
+    private int totalResourceCount;
+    
     public SplitAndVerifyWorker(CommandLineOptions options, VCGen vcGen, Implementation implementation,
       Dictionary<TransferCmd, ReturnCmd> gotoCmdOrigins, VerifierCallback callback, ModelViewInfo mvInfo,
       Outcome outcome)
@@ -73,6 +75,8 @@ namespace VC
       return outcome;
     }
 
+    public int ResourceCount => totalResourceCount;
+    
     private void TrackSplitsCost(List<Split> splits)
     {
       if (!TrackingProgress)
@@ -125,7 +129,7 @@ namespace VC
         }
       }
 
-      split.ReadOutcome(ref outcome, out var proverFailed);
+      split.ReadOutcome(ref outcome, out var proverFailed, ref totalResourceCount);
 
       if (TrackingProgress) {
         lock (this) {

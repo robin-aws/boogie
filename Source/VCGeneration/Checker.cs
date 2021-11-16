@@ -276,6 +276,11 @@ namespace Microsoft.Boogie
       get { return proverRunTime; }
     }
 
+    public int ProverResourceCount
+    {
+      get { return thmProver.GetRCount(); }
+    }
+    
     private void WaitForOutput(object dummy)
     {
       lock (this)
@@ -630,6 +635,11 @@ namespace Microsoft.Boogie
     {
     }
 
+    public virtual int GetRCount()
+    {
+      throw new NotImplementedException();
+    }
+    
     public virtual void SetRandomSeed(int? randomSeed)
     {
     }
