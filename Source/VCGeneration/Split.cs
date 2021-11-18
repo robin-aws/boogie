@@ -130,6 +130,18 @@ namespace VC
         TopLevelDeclarations = Prune.GetLiveDeclarations(par.program, blocks).ToList();
       }
 
+
+      public AssertCmd SingleAssert
+      {
+        get {
+          var firstTwoAsserts = blocks.SelectMany(block => block.cmds.OfType<AssertCmd>()).Take(2).ToList();
+          if (firstTwoAsserts.Count() == 1) {
+            return firstTwoAsserts.Single();
+          }
+          return null;
+        }
+      }
+      
       // TODO: Not really just a name, more like a description?
       public string Name
       {
@@ -1280,6 +1292,11 @@ namespace VC
         {
           System.Console.WriteLine("      --> split #{0} done,  [{1} s] {2}", splitNum + 1,
             checker.ProverRunTime.TotalSeconds, outcome);
+        }
+
+        if (CommandLineOptions.Clo.XmlSink != null) {
+          CommandLineOptions.Clo.XmlSink.WriteEndSplit(outcome.ToString().ToLowerInvariant(), 
+            TimeSpan.FromSeconds(checker.ProverRunTime.TotalSeconds));
         }
 
         if (CommandLineOptions.Clo.VcsDumpSplits)

@@ -113,6 +113,8 @@ namespace VC
           split.Name);
       }
 
+      options.XmlSink?.WriteStartSplit(split.Name, DateTime.UtcNow);
+
       callback.OnProgress?.Invoke("VCprove", currentSplitNumber, total,
         provenCost / (remainingCost + provenCost));
 
