@@ -112,7 +112,7 @@ namespace VC
 
       // async interface
       private Checker checker;
-      private int splitNum;
+      public int splitNum;
       internal VCGen.ErrorReporter reporter;
 
       public Split(List<Block /*!*/> /*!*/ blocks, Dictionary<TransferCmd, ReturnCmd> /*!*/ gotoCmdOrigins,
@@ -131,30 +131,19 @@ namespace VC
       }
 
 
-      public AssertCmd SingleAssert
-      {
-        get {
-          var firstTwoAsserts = blocks.SelectMany(block => block.cmds.OfType<AssertCmd>()).Take(2).ToList();
-          if (firstTwoAsserts.Count() == 1) {
-            return firstTwoAsserts.Single();
-          }
-          return null;
-        }
-      }
-      
+      public IEnumerable<AssertCmd> Asserts => blocks.SelectMany(block => block.cmds.OfType<AssertCmd>());
+
       // TODO: Not really just a name, more like a description?
       public string Name
       {
         get {
-          var asserts = blocks.SelectMany(block => block.cmds.OfType<AssertCmd>()).Take(2).ToList();
-          if (asserts.Count() == 1) {
-            var assert = asserts.Single();
-            var tok = assert.tok;
-            return $"{tok.filename}({tok.line}, {tok.col}) - ErrorData({assert.ErrorData})";
-          } else {
-            // TODO: assign names to all splits?
-            return "(anon split)";
+          var firstTwoAsserts = Asserts.Take(2).ToList();
+          if (firstTwoAsserts.Count == 1) {
+            var singleAssert = firstTwoAsserts.Single();
+            var tok = singleAssert.tok;
+            return $"{impl.Name} - split #{splitNum + 1} - {tok.filename}({tok.line}, {tok.col}) - ErrorData({singleAssert.ErrorData}";
           }
+          return $"{impl.Name} - split #{splitNum + 1}";
         }
       }
       

@@ -107,6 +107,7 @@ namespace VC
     private void StartCheck(Split split, Checker checker)
     {
       int currentSplitNumber = DoSplitting ? Interlocked.Increment(ref splitNumber) - 1 : -1;
+      split.splitNum = currentSplitNumber;
       if (options.Trace && DoSplitting) {
         Console.WriteLine("    checking split {1}/{2}, {3:0.00}%, {0} \n      <{4}>...",
           split.Stats, currentSplitNumber + 1, total, 100 * provenCost / (provenCost + remainingCost),
