@@ -1279,13 +1279,13 @@ namespace VC
 
         if (CommandLineOptions.Clo.Trace && splitNum >= 0)
         {
-          System.Console.WriteLine("      --> split #{0} done,  [{1} s] {2}", splitNum + 1,
-            checker.ProverRunTime.TotalSeconds, outcome);
+          System.Console.WriteLine("      --> split #{0} done,  [{1} s, {2} r] {3}", splitNum + 1,
+            checker.ProverRunTime.TotalSeconds, checker.ProverResourceCount, outcome);
         }
 
         if (CommandLineOptions.Clo.XmlSink != null) {
           CommandLineOptions.Clo.XmlSink.WriteEndSplit(outcome.ToString().ToLowerInvariant(), 
-            TimeSpan.FromSeconds(checker.ProverRunTime.TotalSeconds));
+            TimeSpan.FromSeconds(checker.ProverRunTime.TotalSeconds), checker.ProverResourceCount);
         }
 
         if (CommandLineOptions.Clo.VcsDumpSplits)

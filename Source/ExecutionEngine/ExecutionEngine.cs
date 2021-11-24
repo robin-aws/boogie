@@ -1167,6 +1167,11 @@ namespace Microsoft.Boogie
         var cachedResults = Cache.Lookup(impl, out priority);
         if (cachedResults != null && priority == Priority.SKIP)
         {
+          if (CommandLineOptions.Clo.XmlSink != null)
+          {
+            CommandLineOptions.Clo.XmlSink.WriteStartMethod(impl.Name, cachedResults.Start);
+          }
+
           printer.Inform(string.Format("Retrieving cached verification result for implementation {0}...", impl.Name),
             output);
           if (CommandLineOptions.Clo.VerifySnapshots < 3 ||
@@ -1189,6 +1194,11 @@ namespace Microsoft.Boogie
           vcgen.CachingActionCounts = stats.CachingActionCounts;
           verificationResult.ProofObligationCountBefore = vcgen.CumulativeAssertionCount;
           verificationResult.Start = DateTime.UtcNow;
+
+          if (CommandLineOptions.Clo.XmlSink != null)
+          {
+            CommandLineOptions.Clo.XmlSink.WriteStartMethod(impl.Name, verificationResult.Start);
+          }
 
           try
           {
@@ -1263,7 +1273,6 @@ namespace Microsoft.Boogie
       if (CommandLineOptions.Clo.XmlSink != null)
       {
         lock (CommandLineOptions.Clo.XmlSink) {
-          CommandLineOptions.Clo.XmlSink.WriteStartMethod(impl.Name, verificationResult.Start);
           CommandLineOptions.Clo.XmlSink.WriteEndMethod(verificationResult.Outcome.ToString().ToLowerInvariant(),
             verificationResult.End, verificationResult.End - verificationResult.Start,
             verificationResult.ResourceCount);

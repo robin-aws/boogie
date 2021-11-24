@@ -126,7 +126,7 @@ namespace Microsoft.Boogie
       cce.EndExpose();
     }
     
-    public void WriteEndSplit(string outcome, TimeSpan elapsed)
+    public void WriteEndSplit(string outcome, TimeSpan elapsed, int resourceCount)
     {
       Contract.Requires(outcome != null);
       Contract.Requires(IsOpen);
@@ -137,6 +137,7 @@ namespace Microsoft.Boogie
       {
         wr.WriteStartElement("conclusion");
         wr.WriteAttributeString("duration", elapsed.TotalSeconds.ToString());
+        wr.WriteAttributeString("resourceCount", resourceCount.ToString());
         wr.WriteAttributeString("outcome", outcome);
 
         wr.WriteEndElement(); // outcome
