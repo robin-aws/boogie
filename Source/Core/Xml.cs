@@ -89,7 +89,7 @@ namespace Microsoft.Boogie
       cce.EndExpose();
     }
 
-    public void WriteEndMethod(string outcome, DateTime endTime, TimeSpan elapsed)
+    public void WriteEndMethod(string outcome, DateTime endTime, TimeSpan elapsed, int resourceCount)
     {
       Contract.Requires(outcome != null);
       Contract.Requires(IsOpen);
@@ -101,6 +101,7 @@ namespace Microsoft.Boogie
         wr.WriteStartElement("conclusion");
         wr.WriteAttributeString("endTime", endTime.ToString(DateTimeFormatString));
         wr.WriteAttributeString("duration", elapsed.TotalSeconds.ToString());
+        wr.WriteAttributeString("resourceCount", resourceCount.ToString());
         wr.WriteAttributeString("outcome", outcome);
 
         wr.WriteEndElement(); // outcome
@@ -109,6 +110,42 @@ namespace Microsoft.Boogie
       cce.EndExpose();
     }
 
+    public void WriteStartSplit(string splitName, DateTime startTime)
+    {
+      Contract.Requires(splitName != null);
+      Contract.Requires(IsOpen);
+      //modifies this.*;
+      Contract.Ensures(IsOpen);
+      Contract.Assert(wr != null);
+      cce.BeginExpose(this);
+      {
+        wr.WriteStartElement("split");
+        wr.WriteAttributeString("name", splitName);
+        wr.WriteAttributeString("startTime", startTime.ToString(DateTimeFormatString));
+      }
+      cce.EndExpose();
+    }
+    
+    public void WriteEndSplit(string outcome, TimeSpan elapsed, int resourceCount)
+    {
+      Contract.Requires(outcome != null);
+      Contract.Requires(IsOpen);
+      //modifies this.*;
+      Contract.Ensures(IsOpen);
+      Contract.Assert(wr != null);
+      cce.BeginExpose(this);
+      {
+        wr.WriteStartElement("conclusion");
+        wr.WriteAttributeString("duration", elapsed.TotalSeconds.ToString());
+        wr.WriteAttributeString("resourceCount", resourceCount.ToString());
+        wr.WriteAttributeString("outcome", outcome);
+
+        wr.WriteEndElement(); // outcome
+        wr.WriteEndElement(); // split
+      }
+      cce.EndExpose();
+    }
+    
     public void WriteError(string message, IToken errorToken, IToken relatedToken, List<Block> trace)
     {
       Contract.Requires(errorToken != null);
