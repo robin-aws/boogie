@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Diagnostics.Contracts;
@@ -476,6 +477,12 @@ namespace Microsoft.Boogie
       }
 
       current.Next = other;
+    }
+
+    public static IEnumerable<QKeyValue> Elements(QKeyValue kv) {
+      for (; kv != null; kv = kv.Next) {
+        yield return kv;
+      }
     }
 
     public static QKeyValue FindAttribute(QKeyValue kv, Func<QKeyValue, bool> property)

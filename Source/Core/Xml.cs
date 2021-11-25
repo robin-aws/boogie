@@ -146,6 +146,36 @@ namespace Microsoft.Boogie
       cce.EndExpose();
     }
     
+    public void WriteAssert(AssertCmd assert)
+    {
+      Contract.Requires(assert != null);
+      Contract.Requires(IsOpen);
+      //modifies this.*;
+      Contract.Ensures(IsOpen);
+      Contract.Assert(wr != null);
+      cce.BeginExpose(this);
+      {
+        wr.WriteStartElement("assert");
+        WriteTokenAttributes(assert.tok);
+        wr.WriteAttributeString("expression", assert.Expr.ToString());
+        if (assert.ErrorData != null) {
+          wr.WriteAttributeString("errorData", assert.ErrorData.ToString());
+        }
+        foreach (var kv in QKeyValue.Elements(assert.Attributes)) {
+          wr.WriteStartElement("attribute");
+          wr.WriteAttributeString("key", kv.Key);
+          foreach (var param in kv.Params) {
+            wr.WriteStartElement("parameter");
+            wr.WriteAttributeString("value", param.ToString());
+            wr.WriteEndElement(); // parameter  
+          }
+          wr.WriteEndElement(); // attribute
+        }
+        wr.WriteEndElement(); // assert
+      }
+      cce.EndExpose();
+    }
+    
     public void WriteError(string message, IToken errorToken, IToken relatedToken, List<Block> trace)
     {
       Contract.Requires(errorToken != null);

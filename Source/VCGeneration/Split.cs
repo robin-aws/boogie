@@ -133,17 +133,10 @@ namespace VC
 
       public IEnumerable<AssertCmd> Asserts => blocks.SelectMany(block => block.cmds.OfType<AssertCmd>());
 
-      // TODO: Not really just a name, more like a description?
       public string Name
       {
         get {
-          var firstTwoAsserts = Asserts.Take(2).ToList();
-          if (firstTwoAsserts.Count == 1) {
-            var singleAssert = firstTwoAsserts.Single();
-            var tok = singleAssert.tok;
-            return $"{impl.Name} - split #{splitNum + 1} - {tok.filename}({tok.line}, {tok.col}) - ErrorData({singleAssert.ErrorData}";
-          }
-          return $"{impl.Name} - split #{splitNum + 1}";
+          return $"{impl.Name}$${splitNum + 1}";
         }
       }
       
@@ -1284,6 +1277,9 @@ namespace VC
         }
 
         if (CommandLineOptions.Clo.XmlSink != null) {
+          foreach (var assert in Asserts) {
+            CommandLineOptions.Clo.XmlSink.WriteAssert(assert);
+          }
           CommandLineOptions.Clo.XmlSink.WriteEndSplit(outcome.ToString().ToLowerInvariant(), 
             TimeSpan.FromSeconds(checker.ProverRunTime.TotalSeconds), checker.ProverResourceCount);
         }
